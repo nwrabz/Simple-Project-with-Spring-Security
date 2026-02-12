@@ -18,6 +18,6 @@ public class Authority {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "user")
+    @JoinColumn(name = "user_authority")
     private User user;
 }

@@ -17,8 +17,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private String firstName;
-    private String lastName;
+    private String username;
+    private String password;
 
     @Enumerated(EnumType.STRING)
     private EncryptionAlgorithm algorithm;
