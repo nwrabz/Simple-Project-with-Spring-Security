@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.wrabz.com.project_with_security.model.User;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
@@ -19,7 +18,6 @@ public class CustomUserDetails implements UserDetails {
     public CustomUserDetails(User user) {
         this.user = user;
     }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

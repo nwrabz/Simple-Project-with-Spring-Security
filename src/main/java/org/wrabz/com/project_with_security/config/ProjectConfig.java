@@ -14,18 +14,11 @@ import org.wrabz.com.project_with_security.service.AuthenticationProviderService
 @Configuration
 public class ProjectConfig {
 
-    private final AuthenticationProviderService authenticationProvider;
-
-    public ProjectConfig(AuthenticationProviderService authenticationProvider) {
-        this.authenticationProvider = authenticationProvider;
-    }
-
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Primary
     @Bean
     public SCryptPasswordEncoder sCryptPasswordEncoder() {
         return new SCryptPasswordEncoder(
@@ -41,18 +34,5 @@ public class ProjectConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
-    }
-
-    @Bean
-    protected SecurityFilterChain springSecurityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authenticationProvider(authenticationProvider)
-                .formLogin(form ->
-                        form.defaultSuccessUrl("/main", true)
-                )
-                .authorizeHttpRequests(auth ->
-                        auth.anyRequest().authenticated());
-
-        return http.build();
     }
 }

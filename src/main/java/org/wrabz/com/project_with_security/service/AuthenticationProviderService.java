@@ -13,20 +13,19 @@ import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.wrabz.com.project_with_security.CustomUserDetails;
 
-import static org.wrabz.com.project_with_security.config.EncryptionAlgorithm.BCRYPT;
-import static org.wrabz.com.project_with_security.config.EncryptionAlgorithm.SCRYPT;
-
 @Service
 public class AuthenticationProviderService implements AuthenticationProvider {
 
-    @Autowired
-    private JpaUserDetailService userDetailService;
+    private final JpaUserDetailService userDetailService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final SCryptPasswordEncoder sCryptPasswordEncoder;
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    public AuthenticationProviderService(JpaUserDetailService userDetailService, BCryptPasswordEncoder bCryptPasswordEncoder, SCryptPasswordEncoder sCryptPasswordEncoder) {
+        this.userDetailService = userDetailService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.sCryptPasswordEncoder = sCryptPasswordEncoder;
+    }
 
-    @Autowired
-    private SCryptPasswordEncoder sCryptPasswordEncoder;
 
     @Override
     public @Nullable Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -37,13 +36,10 @@ public class AuthenticationProviderService implements AuthenticationProvider {
         CustomUserDetails user =
                 userDetailService.loadUserByUsername(username);
 
-        switch (user.getUser().getAlgorithm()) {
-            case BCRYPT:
-                return checkPassword(user, password, bCryptPasswordEncoder);
-            case SCRYPT:
-                return checkPassword(user, password, sCryptPasswordEncoder);
-        }
-        throw new BadCredentialsException("Invalid username or password");
+        return switch (user.getUser().getAlgorithm()) {
+            case BCRYPT -> checkPassword(user, password, bCryptPasswordEncoder);
+            case SCRYPT -> checkPassword(user, password, sCryptPasswordEncoder);
+        };
     }
 
     @Override
@@ -57,13 +53,11 @@ public class AuthenticationProviderService implements AuthenticationProvider {
                                          PasswordEncoder encoder) {
         if (encoder.matches(rawPassword, user.getPassword())) {
             return new UsernamePasswordAuthenticationToken(
-                    user.getUsername(),
-                    user.getPassword(),
+                    user,
+                    null,
                     user.getAuthorities());
         } else {
             throw new BadCredentialsException("Bad credentials");
         }
     }
-
-
 }
