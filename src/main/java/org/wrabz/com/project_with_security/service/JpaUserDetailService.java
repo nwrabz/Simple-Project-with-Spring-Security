@@ -17,6 +17,10 @@ public class JpaUserDetailService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+    JpaUserDetailService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     @Override
     public CustomUserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
         Supplier<UsernameNotFoundException>  supplier =

@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Data
 @Setter
 @Getter
 public class Authority {

@@ -9,12 +9,13 @@ import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 @Configuration
 public class ProjectConfig {
 
-    @Primary
+
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    @Primary
     @Bean
     public SCryptPasswordEncoder sCryptPasswordEncoder() {
         return new SCryptPasswordEncoder(
