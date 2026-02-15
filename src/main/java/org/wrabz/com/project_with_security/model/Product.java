@@ -1,22 +1,20 @@
 package org.wrabz.com.project_with_security.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Setter
 @Getter
-public class Authority {
-
+public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     private String name;
+    private double price;
 
-    @ManyToOne
-    @JoinColumn(name = "user")
-    private User user;
+    @Enumerated(EnumType.STRING)
+    private Currency currency;
 }
