@@ -52,5 +52,18 @@ public class AuthenticationProviderService implements AuthenticationProvider {
                 .isAssignableFrom(authentication);
     }
 
+    private Authentication checkPassword(CustomUserDetails user,
+                                         String rawPassword,
+                                         PasswordEncoder encoder) {
+        if (encoder.matches(rawPassword, user.getPassword())) {
+            return new UsernamePasswordAuthenticationToken(
+                    user.getUsername(),
+                    user.getPassword(),
+                    user.getAuthorities());
+        } else {
+            throw new BadCredentialsException("Bad credentials");
+        }
+    }
+
 
 }
